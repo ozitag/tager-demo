@@ -1,31 +1,33 @@
-import Vue from 'vue';
-import VueRouter, { RouteConfig } from 'vue-router';
+import Vue, { CreateElement, VNode } from 'vue';
+import VueRouter from 'vue-router';
+import { CONSTANTS } from '@tager/admin-core';
 
-import Home from '../views/Home.vue';
+import NotFound from '@/views/NotFound/index.vue';
+import { CustomRouteConfig } from '@/typings/common';
 
 Vue.use(VueRouter);
 
-const routes: Array<RouteConfig> = [
+const HomePage = Vue.extend({
+  render(createElement: CreateElement): VNode {
+    return createElement('div', {}, 'Home page');
+  }
+});
+
+const routes: Array<CustomRouteConfig> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    component: HomePage,
+    meta: { getBreadcrumbs: () => [{ path: '/', label: 'Home' }] }
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '*',
+    component: NotFound
   }
 ];
 
 const router = new VueRouter({
   mode: 'history',
-  base: '/admin',
-  // base: process.env.BASE_URL,
+  base: CONSTANTS.BASE_PATH,
   routes
 });
 

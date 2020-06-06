@@ -1,0 +1,43 @@
+<template>
+  <textarea
+    v-bind:value="value"
+    v-on:input="$emit('input', $event.target.value)"
+  />
+</template>
+
+<script>
+export default {
+  name: 'TextArea',
+  props: {
+    value: String
+  }
+};
+</script>
+
+<style scoped lang="scss">
+textarea {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  overflow: auto;
+  resize: vertical;
+
+  &:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+</style>

@@ -4,5 +4,5 @@ export const FETCH_STATUSES: ConstantMap<FetchStatus> = {
   IDLE: 'IDLE',
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE',
+  FAILURE: 'FAILURE'
 };

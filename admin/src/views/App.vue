@@ -1,60 +1,29 @@
 <template>
-  <div>
-    <sidebar></sidebar>
-    <div class="page-container"></div>
-  </div>
+  <base-layout
+    v-bind:config="config"
+    v-bind:sidebar-menu-list="sidebarMenuList"
+  >
+    <router-view />
+  </base-layout>
 </template>
 
-<script>
-import Sidebar from './components/Sidebar';
-// import Navbar from './components/Navbar';
+<script lang="ts">
+import Vue from 'vue';
+import { BaseLayout } from '@tager/admin-core';
 
-import { localStorageService } from '@/services/storage';
+import config from '@/config/config.json';
+import { MENU_ITEM_LIST } from '@/config/sidebarMenu';
 
-const SIDEBAR_COLLAPSED_KEY = 'sidebarCollapsed';
-
-export default {
+export default Vue.extend({
   name: 'App',
-  components: { Sidebar },
+  components: { BaseLayout },
   data() {
     return {
-      onDragOver: false,
-      sidebarCollapsed: false
+      config,
+      sidebarMenuList: MENU_ITEM_LIST
     };
-  },
-  computed: {
-    version() {
-      return {
-        date: !this.sidebarCollapsed ? '2020-04-08' : null,
-        current: '0.5.3'
-      };
-    }
-  },
-  mounted() {
-    this.sidebarCollapsed =
-      localStorageService.get(SIDEBAR_COLLAPSED_KEY) === 'true';
-  },
-  methods: {
-    toggleSidebar() {
-      const newValue = !this.sidebarCollapsed;
-      this.sidebarCollapsed = newValue;
-      localStorageService.set(SIDEBAR_COLLAPSED_KEY, newValue);
-    }
   }
-};
+});
 </script>
 
-<style scoped lang="scss">
-.page-container {
-  min-height: 100vh;
-  transition: all 0.2s ease;
-
-  @media screen and (max-width: 1439px) and (min-width: 992px) {
-    padding-left: 70px;
-  }
-
-  @media screen and (max-width: 991px) {
-    padding-left: 0;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

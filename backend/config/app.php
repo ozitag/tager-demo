@@ -168,12 +168,16 @@ return [
         /*
          * Application Service Providers...
          */
+
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
 
+        Ozerich\FileStorage\StorageServiceProvider::class,
+        OZiTAG\Tager\Backend\Admin\TagerBackendAdminServiceProvider::class
     ],
 
     /*

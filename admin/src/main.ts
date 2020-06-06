@@ -1,18 +1,19 @@
 import Vue from 'vue';
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
+import { api, configStore } from '@tager/admin-core';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@/assets/css/index.css';
 
-import App from './views/App.vue';
-// import router from './router';
-// import store from './store';
+import router from '@/router';
+import config from '@/config/config.json';
+import App from '@/views/App.vue';
+import { registerComponents } from '@/components';
 
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
+registerComponents();
+
+api.setApiOrigin('https://presetbox.dev.ozitag.com');
+configStore.setConfig(config);
 
 new Vue({
-  // router,
-  // store,
+  router,
   render: h => h(App)
 }).$mount('#app');

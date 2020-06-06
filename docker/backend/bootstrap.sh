@@ -6,4 +6,5 @@ chown application:application -R storage
 chown application:application -R bootstrap
 
 composer i --ignore-platform-reqs
-php artisan migrate
+
+php artisan migrate --force

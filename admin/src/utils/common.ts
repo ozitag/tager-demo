@@ -1,7 +1,8 @@
 import round from 'lodash/round';
 
-import { LoadableData, Nullable } from '@/typings/common';
+import { ErrorsMap, LoadableData, Nullable } from '@/typings/common';
 import { FETCH_STATUSES } from '@/constants/common';
+import { RequestError } from '@tager/admin-core';
 
 function getNumberSign(value: number): string {
   return value === 0 ? '' : value > 0 ? '+' : '-';
@@ -91,30 +92,30 @@ export function createResourceLoader<DataType>(initialData: DataType) {
       return {
         data: initialData,
         status: FETCH_STATUSES.IDLE,
-        error: null,
+        error: null
       };
     },
     pending(): LoadableData<DataType> {
       return {
         data: initialData,
         status: FETCH_STATUSES.LOADING,
-        error: null,
+        error: null
       };
     },
     fulfill(payload: DataType): LoadableData<DataType> {
       return {
         data: payload,
         status: FETCH_STATUSES.SUCCESS,
-        error: null,
+        error: null
       };
     },
     reject(error?: Nullable<string>): LoadableData<DataType> {
       return {
         data: initialData,
         status: FETCH_STATUSES.FAILURE,
-        error: error ?? null,
+        error: error ?? null
       };
-    },
+    }
   };
 }
 
@@ -127,11 +128,38 @@ export function getOrigin(): string {
 }
 
 export function isAbsoluteUrl(url: string): boolean {
-  return ['https:', 'http:'].some((protocol) => url.startsWith(protocol));
+  return ['https:', 'http:'].some(protocol => url.startsWith(protocol));
 }
 
 export function getAbsoluteUrl(urlOrPath: string): string {
   if (isAbsoluteUrl(urlOrPath)) return urlOrPath;
 
   return getOrigin() + urlOrPath;
+}
+
+export function convertRequestErrorToFormErrors(
+  error: Error
+): Record<string, string> {
+  if (error instanceof RequestError) {
+    const responseBody = error.body as { errors: ErrorsMap };
+
+    if (responseBody.errors) {
+      return Object.keys(responseBody.errors).reduce<Record<string, string>>(
+        (result, key) => {
+          const error = responseBody.errors && responseBody.errors[key];
+          result[key] = error?.message ?? '';
+          return result;
+        },
+        {}
+      );
+    }
+  }
+
+  return {};
+}
+
+export function convertStringToNumberIfValid(value: string): number | string {
+  const parsedNumber = Number(value.trim());
+
+  return Number.isNaN(parsedNumber) ? value : parsedNumber;
 }

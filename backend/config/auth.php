@@ -16,8 +16,9 @@ return [
         'secret_key' => env('APP_JWT_KEY'), // TODO?
         'algorithm' => 'HS256'
     ],
+
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -39,14 +40,9 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
         'api' => [
             'driver' => 'passport',
-            'provider' => 'users',
+            'provider' => 'administrators',
         ],
     ],
 
@@ -70,12 +66,8 @@ return [
     'providers' => [
         'administrators' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
-        ],
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
+            'model' => \OZiTAG\Tager\Backend\Admin\Models\Administrator::class,
+        ]
     ],
 
     /*
@@ -94,12 +86,7 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+
     ],
 
     /*

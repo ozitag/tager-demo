@@ -14,6 +14,8 @@ services:
     working_dir: /var/www
     networks:
       - app-network
+    volumes:
+      - ./backend/storage/app/public/uploads:/var/www/uploads
   web:
     container_name: ${APP_NAME}-web
     restart: always
@@ -37,8 +39,11 @@ services:
       context: ./docker/admin-auth
       dockerfile: Dockerfile
     environment:
-      PAGE_TITLE: ${APP_TITLE} - Login - Local Version
+      PAGE_TITLE: ${APP_TITLE} - Dev
       BASE_PATH: /admin/auth
+      LOGO: "logo.svg"
+      LANGUAGE: "EN"
+      BRAND_COLOR: "#DD6900"
     networks:
       - app-network
   backend:
@@ -52,12 +57,13 @@ services:
       target: dev
     depends_on:
       - db
+      - redis
     volumes:
       - ./backend:/var/www/app
     environment:
       CONTAINER_ROLE: fpm
       WEB_DOCUMENT_ROOT: /var/www/app/public
-      PHP_MEMORY_LIMIT: 64M
+      PHP_MEMORY_LIMIT: 1024M
       PHP_UPLOAD_MAX_FILESIZE: 64M
       PHP_POST_MAX_SIZE: 64M
       PHP_MAX_EXECUTION_TIME: 18000
@@ -71,6 +77,12 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+    networks:
+      - app-network
+  redis:
+    image: redis
+    container_name: ${APP_NAME}-redis
+    restart: always
     networks:
       - app-network
 networks:
