@@ -10,7 +10,6 @@ import { registerComponents } from '@/components';
 
 registerComponents();
 
-api.setApiOrigin('https://presetbox.dev.ozitag.com');
 configStore.setConfig(config);
 
 new Vue({
