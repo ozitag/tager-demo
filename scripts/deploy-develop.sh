@@ -3,7 +3,7 @@ cd /srv/tager
 sudo chown www-data:www-data -R .
 
 sudo -u www-data git fetch --all
-sudo -u www-data git reset --hard origin/develop
+sudo -u www-data git reset --hard origin/master
 sudo -u www-data git clean -f -d
 
 sudo cp .env.development .env
