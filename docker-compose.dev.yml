@@ -39,8 +39,8 @@ services:
       context: ./docker/admin-auth
       dockerfile: Dockerfile
     environment:
-      PAGE_TITLE: ${APP_TITLE} - Dev
       BASE_PATH: /admin/auth
+      PAGE_TITLE: "Tager Demo - Login"
       LOGO: "logo.svg"
       LANGUAGE: "EN"
       BRAND_COLOR: "#DD6900"
