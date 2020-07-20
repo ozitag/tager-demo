@@ -11,7 +11,7 @@
     "@tager/admin-core": "^0.0.2",
     "core-js": "^3.6.4",
     "date-fns": "^2.14.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3"
