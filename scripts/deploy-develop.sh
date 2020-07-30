@@ -1,4 +1,4 @@
-cd /srv/tager
+cd /srv/tager-demo
 
 sudo chown www-data:www-data -R .
 
@@ -11,6 +11,6 @@ sudo cp web/.env.development web/.env
 sudo cp backend/.env.development backend/.env
 sudo cp admin/.env.development admin/.env
 
-sudo cp scripts/nginx-develop.conf /etc/nginx/sites-available/tager
+sudo cp scripts/nginx-develop.conf /etc/nginx/sites-available/tager-demo
 
-sudo docker-compose -f docker-compose.dev.yml --project-name tager up --build --force-recreate -d
+sudo docker-compose -f docker-compose.dev.yml --project-name tager-demo up --build --force-recreate -d
