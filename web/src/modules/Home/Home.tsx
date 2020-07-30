@@ -1,12 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { ReactComponent as NextLogo } from '@assets/svg/nextjs-logo.svg';
+import { selectCount, increment, decrement } from '@/store/reducers/example';
+import { useTranslation } from '@server/i18n';
+import Link from '@/components/Link';
+
+import { ReactComponent as OZiTAGLogo } from '@/assets/svg/ozitag-logo.svg';
 
 function Home() {
+  const { t } = useTranslation();
+  const count = useSelector(selectCount);
+  const dispatch = useDispatch();
+
   return (
     <Wrapper>
-      <NextLogo />
+      <button onClick={() => dispatch(increment())}>Increment</button>
+      <h2>Count: {count}</h2>
+      <button onClick={() => dispatch(decrement())}>Decrement</button>
+
+      <h1>{t('hello')}</h1>
+      <OZiTAGLogo />
+      <Link to="/test">
+        <h2>Go to test</h2>
+      </Link>
     </Wrapper>
   );
 }
@@ -19,6 +36,7 @@ const Wrapper = styled.div`
   background-size: 50px 50px;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;

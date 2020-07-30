@@ -1,100 +1,73 @@
-import React from 'react';
-import App from 'next/app';
-import NProgress from 'nprogress';
-import Router from 'next/router';
-import { Provider } from 'react-redux';
+import React, { useEffect } from 'react';
 import * as Sentry from '@sentry/node';
-import TagManager from 'react-gtm-module';
+import {
+  cookie,
+  useFacebookPixel,
+  useGoogleAnalytics,
+  useGoogleTagManager,
+  useProgressBar,
+  useYandexMetrika,
+} from '@tager/web-core';
+import { ModalProvider } from '@tager/web-components';
 
-import '@assets/css/index.css';
-import withRedux from '@hocs/withRedux';
+import '@/assets/css/index.css';
+import withRedux from '@/hocs/withRedux';
 import { i18n, appWithTranslation } from '@server/i18n';
-import { updateCookie } from '@utils/cookie';
-import { Nullable } from '@typings/common';
-import { CustomAppProps } from '@typings/hocs';
-import ModalProvider from '@components/Modal';
-import withYandexMetrika from '@hocs/withYandexMetrika';
-import withGoogleAnalytics from '@hocs/withGoogleAnalytics';
-import withFacebookPixel from '@hocs/withFacebookPixel';
+import { CustomApp_Component } from '@/typings/hocs';
 
 Sentry.init({
-  enabled: process.env.NODE_ENV === 'production',
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  environment: process.env.REACT_APP_SENTRY_ENVIRONMENT,
+  enabled:
+    process.env.NODE_ENV === 'production' &&
+    process.env.NEXT_PUBLIC_ENV !== 'local',
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: [
+    process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
+    process.env.NEXT_PUBLIC_ENV,
+  ].join('_'),
 });
 
 /**
  * Custom App documentation
  * https://nextjs.org/docs/advanced-features/custom-app
  */
-class CustomApp extends App<CustomAppProps> {
-  /**
-   * Adding a custom getInitialProps in your App will disable Automatic Static Optimization.
-   * https://nextjs.org/docs/advanced-features/automatic-static-optimization
-   */
-  /*
-  static async getInitialProps({ Component, ctx }: AppContext) {
-    const pageProps = Component.getInitialProps
-      ? await Component.getInitialProps(ctx)
-      : {};
+const CustomApp: CustomApp_Component = (props) => {
+  useProgressBar({ showSpinner: false });
 
-    return { pageProps };
-  }
-*/
+  useGoogleTagManager();
+  useGoogleAnalytics();
+  useYandexMetrika();
+  useFacebookPixel();
 
-  componentDidMount() {
-    i18n.on('languageChanged', (lang: string) => updateCookie('lng', lang));
+  useEffect(() => {
+    i18n.on('languageChanged', (lang: string) => cookie.set('lng', lang));
+  }, []);
 
-    NProgress.configure({ showSpinner: false });
-    let timeoutId: Nullable<number> = null;
-    const TIMEOUT = 500;
+  const { Component, pageProps } = props;
 
-    function resetTimeoutIfNeeded() {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-      }
-    }
+  // Workaround for https://github.com/zeit/next.js/issues/8592
+  // @ts-ignore
+  const { err } = props;
+  const modifiedPageProps = { ...pageProps, err };
+  return (
+    <ModalProvider>
+      <Component {...modifiedPageProps} />
+    </ModalProvider>
+  );
+};
 
-    Router.events.on('routeChangeStart', (url) => {
-      resetTimeoutIfNeeded();
-      timeoutId = setTimeout(() => NProgress.start(), TIMEOUT);
-    });
-    Router.events.on('routeChangeComplete', () => {
-      resetTimeoutIfNeeded();
-      NProgress.done();
-    });
-    Router.events.on('routeChangeError', () => {
-      resetTimeoutIfNeeded();
-      NProgress.done();
-    });
+/**
+ * Only use this method if you have blocking data requirements for
+ * every single page in your application. This disables the ability to
+ * perform automatic static optimization, causing every page in your app to
+ * be server-side rendered.
+ *
+ * Reference: https://nextjs.org/docs/advanced-features/custom-app
+ */
+// CustomApp.getInitialProps = async (appContext) => {
+//   /** calls page's `getInitialProps` and fills `appProps.pageProps` */
+//   const appProps = await App.getInitialProps(appContext);
+//
+//   return { ...appProps };
+// };
 
-    if (process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID) {
-      TagManager.initialize({
-        gtmId: process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID,
-      });
-    }
-  }
-
-  render() {
-    const { Component, pageProps, store } = this.props;
-
-    // Workaround for https://github.com/zeit/next.js/issues/8592
-    // @ts-ignore
-    const { err } = this.props;
-    const modifiedPageProps = { ...pageProps, err };
-    return (
-      <Provider store={store}>
-        <ModalProvider>
-          <Component {...modifiedPageProps} />
-        </ModalProvider>
-      </Provider>
-    );
-  }
-}
-
-export default withFacebookPixel(
-  withGoogleAnalytics(
-    withYandexMetrika(appWithTranslation(withRedux(CustomApp)))
-  )
-);
+export default appWithTranslation(withRedux(CustomApp));

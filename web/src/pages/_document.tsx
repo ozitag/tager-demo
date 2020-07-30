@@ -1,17 +1,13 @@
 import React from 'react';
-
-import Document, {
-  DocumentContext,
-  Html,
-  Head,
-  Main,
-  NextScript,
-} from 'next/document';
-
+import Document, { DocumentContext, Html, Main } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-import YandexMetrikaScript from '@components/YandexMetrikaScript';
-import FacebookPixelScript from '@components/FacebookPixelScript';
+import {
+  YandexMetrikaScript,
+  FacebookPixelScript,
+} from '@tager/web-components';
+import TagerNextHead from '@/components/next/TagerNextHead';
+import TagerNextScript from '@/components/next/TagerNextScript';
 
 /**
  * Custom Document documentation
@@ -51,13 +47,13 @@ class CustomDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head>
-          <link rel="preconnect" href="//fonts.gstatic.com" crossOrigin="" />
-          <link rel="preconnect" href="//fonts.googleapis.com" crossOrigin="" />
-          <link
-            href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500&display=swap&subset=cyrillic"
-            rel="stylesheet"
-          />
+        <TagerNextHead>
+          {/*<link rel="preconnect" href="//fonts.gstatic.com" crossOrigin="" />*/}
+          {/*<link rel="preconnect" href="//fonts.googleapis.com" crossOrigin="" />*/}
+          {/*<link*/}
+          {/*  href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500&display=swap&subset=cyrillic"*/}
+          {/*  rel="stylesheet"*/}
+          {/*/>*/}
           <link
             rel="apple-touch-icon"
             sizes="180x180"
@@ -87,10 +83,10 @@ class CustomDocument extends Document {
           />
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
-        </Head>
+        </TagerNextHead>
         <body>
           <Main />
-          <script src="/global.js" defer />
+          <script src="/static/js/global.js" defer />
           <script
             src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js"
             defer
@@ -105,7 +101,7 @@ class CustomDocument extends Document {
           />
           <YandexMetrikaScript />
           <FacebookPixelScript />
-          <NextScript />
+          <TagerNextScript />
         </body>
       </Html>
     );

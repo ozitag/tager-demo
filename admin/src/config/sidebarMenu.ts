@@ -1,10 +1,3 @@
-export type MenuItemType = {
-  id: string;
-  name: string;
-  path: string;
-  icon: string;
-  isOpen?: boolean;
-  children?: Array<{ name: string; path: string }>;
-};
+import { MenuItemType } from '@tager/admin-layout';
 
 export const MENU_ITEM_LIST: Array<MenuItemType> = [];

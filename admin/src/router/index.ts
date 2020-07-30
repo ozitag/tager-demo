@@ -1,34 +1,18 @@
-import Vue, { CreateElement, VNode } from 'vue';
-import VueRouter from 'vue-router';
-import { CONSTANTS } from '@tager/admin-core';
+import { createRouter, CustomRouteConfig } from '@tager/admin-layout';
 
-import NotFound from '@/views/NotFound/index.vue';
-import { CustomRouteConfig } from '@/typings/common';
+import Home from '@/views/Home.vue';
 
-Vue.use(VueRouter);
-
-const HomePage = Vue.extend({
-  render(createElement: CreateElement): VNode {
-    return createElement('div', {}, 'Home page');
-  }
-});
-
-const routes: Array<CustomRouteConfig> = [
-  {
-    path: '/',
-    component: HomePage,
-    meta: { getBreadcrumbs: () => [{ path: '/', label: 'Home' }] }
+export const HOME_ROUTE: CustomRouteConfig = {
+  path: '/',
+  component: Home,
+  name: 'Home',
+  meta: {
+    getBreadcrumbs: (route) => [{ path: '/', label: route.name }],
   },
-  {
-    path: '*',
-    component: NotFound
-  }
-];
+};
 
-const router = new VueRouter({
-  mode: 'history',
-  base: CONSTANTS.BASE_PATH,
-  routes
+const router = createRouter({
+  routes: [HOME_ROUTE],
 });
 
 export default router;

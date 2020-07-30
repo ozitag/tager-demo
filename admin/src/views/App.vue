@@ -1,28 +1,21 @@
 <template>
-  <base-layout
-    v-bind:config="config"
-    v-bind:sidebar-menu-list="sidebarMenuList"
-  >
+  <page-layout :sidebar-menu-list="sidebarMenuList">
     <router-view />
-  </base-layout>
+  </page-layout>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { BaseLayout } from '@tager/admin-core';
+import { defineComponent } from '@vue/composition-api';
 
-import config from '@/config/config.json';
 import { MENU_ITEM_LIST } from '@/config/sidebarMenu';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'App',
-  components: { BaseLayout },
-  data() {
+  setup() {
     return {
-      config,
-      sidebarMenuList: MENU_ITEM_LIST
+      sidebarMenuList: MENU_ITEM_LIST,
     };
-  }
+  },
 });
 </script>
 

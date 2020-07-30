@@ -17,6 +17,9 @@ RUN yarn install
 
 COPY ./admin/ .
 
+# Uncomment if you need app.json from project root
+# COPY ./app.json ./src/config/
+
 RUN yarn build
 
 # production stage
